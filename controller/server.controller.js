@@ -5,13 +5,33 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const postpath = path.join(__dirname, "../database/post.json");
 const now = new Date().toISOString()
-
 // Get All
 const getAllPosts = async (req, res) => {
-    const readData = await fs.readFile(postpath, "utf-8")
-    const posts = JSON.parse(readData)
-    res.status(200).json(posts)
-}
+  try {
+    const { title, content, category } = req.query;
+    const readData = await fs.readFile(postpath, "utf-8");
+    const posts = JSON.parse(readData);
+    let result = posts;
+    if (title) {
+      result = result.filter(post =>
+        post.title.toLowerCase().includes(title.toLowerCase())
+      );
+    }
+    if (content) {
+      result = result.filter(post => post.content === content);
+    }
+    if (category) {
+      result = result.filter(post => post.category === category);
+    }
+    if (result.length === 0) {
+      return res.status(404).json({ message: "Bunday post topilmadi" });
+    }
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ message: "Serverda xatolik bor", error: error.message });
+  }
+};
+
 
 // bitta Post
 const getOnePost = async (req, res) => {

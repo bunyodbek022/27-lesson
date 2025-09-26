@@ -1,8 +1,9 @@
 import {Router} from "express";
-import { addPost, deletePost, getAllPosts, getOnePost, updatePost } from "../controller/server.controller.js";
+import { addPost, deletePost, getAllPosts, getOnePost, updatePost} from "../controller/server.controller.js";
 
 const router = Router()
 
+// Barcha postlarni o'qiydi yoki filter boyicha
 router.get("/",getAllPosts);
 
 // GET /posts/:id
